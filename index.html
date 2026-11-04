@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<!-- saved from url=(0099)file:///C:/Users/yesenia.leal/Desktop/Dashboard%20de%20Versiones%20-%20Control%20de%20Software.html -->
+<html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Versiones - Control de Software</title>
+    <!-- Fuentes Google: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <link href="./Dashboard de Versiones - Control de Software_files/css2" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-primary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --hover-row: #f1f5f9;
+            
+            /* Badges de versión */
+            --front-bg: #eff6ff;
+            --front-text: #1d4ed8;
+            --front-border: #bfdbfe;
+            
+            --back-bg: #ecfdf5;
+            --back-text: #047857;
+            --back-border: #a7f3d0;
+
+            /* Tarjetas Api_OC */
+            --api-prod-bg: #dcfce7;
+            --api-prod-text: #15803d;
+            --api-prod-border: #86efac;
+
+            --api-integ-bg: #fef3c7;
+            --api-integ-text: #b45309;
+            --api-integ-border: #fde68a;
+
+            /* Banner edición */
+            --edit-banner-bg: #fef3c7;
+            --edit-banner-text: #92400e;
+            --edit-banner-border: #fde68a;
+        }
+
+        .dark {
+            --bg-primary: #0f172a;
+            --bg-card: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --hover-row: #334155;
+            
+            --front-bg: #1e3a8a33;
+            --front-text: #60a5fa;
+            --front-border: #1e40af;
+            
+            --back-bg: #064e3b33;
+            --back-text: #34d399;
+            --back-border: #065f46;
+
+            --api-prod-bg: #064e3b33;
+            --api-prod-text: #4ade80;
+            --api-prod-border: #166534;
+
+            --api-integ-bg: #78350f33;
+            --api-integ-text: #fbbf24;
+            --api-integ-border: #92400e;
+
+            --edit-banner-bg: #451a03;
+            --edit-banner-text: #fde68a;
+            --edit-banner-border: #78350f;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            padding: 2.5rem 1.5rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            flex-wrap: wrap;
+        }
+
+        /* Tarjetas Api_OC */
+        .api-oc-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 0.45rem 0.75rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .api-oc-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            letter-spacing: 0.03em;
+        }
+
+        .api-oc-pill {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.825rem;
+            font-weight: 700;
+            padding: 0.15rem 0.5rem;
+            border-radius: 0.375rem;
+        }
+
+        .pill-prod {
+            background-color: var(--api-prod-bg);
+            color: var(--api-prod-text);
+            border: 1px solid var(--api-prod-border);
+        }
+
+        .pill-integ {
+            background-color: var(--api-integ-bg);
+            color: var(--api-integ-text);
+            border: 1px solid var(--api-integ-border);
+        }
+
+        .btn-toggle {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .btn-toggle:hover {
+            background-color: var(--hover-row);
+        }
+
+        /* Indicador modo edición */
+        #edit-mode-indicator {
+            display: none;
+            background-color: var(--edit-banner-bg);
+            color: var(--edit-banner-text);
+            border: 1px solid var(--edit-banner-border);
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tables-grid {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .table-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            flex: 1;
+            min-width: 320px;
+        }
+
+        .table-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+        }
+
+        .table-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .badge-count {
+            font-size: 0.75rem;
+            background-color: var(--hover-row);
+            color: var(--text-muted);
+            padding: 0.15rem 0.5rem;
+            border-radius: 9999px;
+        }
+
+        /* =========================================================
+           REQUISITO DE TABLA PURA SIN FLEXBOX Y SIN DESFASES
+           ========================================================= */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        tr {
+            position: relative; /* Para el posicionamiento del botón eliminar fuera de flujo */
+        }
+
+        th {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            padding: 0.75rem 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 600;
+        }
+
+        /* Anchos exactos solicitados */
+        th.col-cliente, td.col-cliente {
+            width: 50%;
+            text-align: left;
+        }
+
+        th.col-front, td.col-front {
+            width: 25%;
+            text-align: center;
+        }
+
+        th.col-back, td.col-back {
+            width: 25%;
+            text-align: center;
+        }
+
+        /* Bordes inferiores limpios en las celdas td */
+        td {
+            padding: 0.75rem 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.875rem;
+            vertical-align: middle;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: var(--hover-row);
+        }
+
+        /* Puntos de estatus integrados sin romper layout */
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 0.6rem;
+            vertical-align: middle;
+        }
+
+        .dot-pink { background-color: #ec4899; }
+        .dot-amber { background-color: #f59e0b; }
+        .dot-blue { background-color: #3b82f6; }
+        .dot-purple { background-color: #a855f7; }
+
+        .client-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            vertical-align: middle;
+        }
+
+        /* Badges de Versión */
+        .ver-pill {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 0.2rem 0.55rem;
+            border-radius: 0.375rem;
+            display: inline-block;
+        }
+
+        .ver-front {
+            background-color: var(--front-bg);
+            color: var(--front-text);
+            border: 1px solid var(--front-border);
+        }
+
+        .ver-back {
+            background-color: var(--back-bg);
+            color: var(--back-text);
+            border: 1px solid var(--back-border);
+        }
+
+        /* Botón de eliminar fuera de flujo (Absolute) */
+        .btn-delete-row {
+            display: none;
+            position: absolute;
+            left: 2px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 12px;
+            line-height: 18px;
+            text-align: center;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        body.is-editing tr:hover .btn-delete-row {
+            display: block;
+        }
+
+        /* Modo edición styling */
+        body.is-editing td[contenteditable="true"],
+        body.is-editing span[contenteditable="true"] {
+            outline: 2px dashed #f59e0b;
+            outline-offset: -2px;
+            background-color: rgba(245, 158, 11, 0.1);
+            cursor: text;
+        }
+
+        .btn-add-row {
+            display: none;
+            width: 100%;
+            padding: 0.5rem;
+            margin-top: 1rem;
+            background-color: transparent;
+            border: 1px dashed var(--border-color);
+            color: var(--text-muted);
+            border-radius: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        body.is-editing .btn-add-row {
+            display: block;
+        }
+
+        .btn-add-row:hover {
+            background-color: var(--hover-row);
+            color: var(--text-primary);
+        }
+
+        @media (max-width: 900px) {
+            .tables-grid {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body class="">
+
+<div class="container">
+    <header>
+        <h1>Control de Versiones VENVERS</h1>
+        <div class="header-right">
+            <!-- TARJETAS API_OC -->
+            <div class="api-oc-card">
+                <span class="api-oc-label">Api_OC Prod:</span>
+                <span class="api-oc-pill pill-prod" id="api-oc-prod-val">v1.2.6</span>
+            </div>
+
+            <div class="api-oc-card">
+                <span class="api-oc-label">Api_OC Integ:</span>
+                <span class="api-oc-pill pill-integ" id="api-oc-integ-val">v1.4.6</span>
+            </div>
+
+            <button class="btn-toggle" onclick="toggleDarkMode()">
+                <span id="theme-icon">🌙</span> Modo Oscuro
+            </button>
+        </div>
+    </header>
+
+    <!-- Indicador de modo edición -->
+    <div id="edit-mode-indicator" style="display: none;">
+        <span>✏️ Modo Edición Activo — Haz clic en cualquier texto para modificarlo. Atajo: <code>Ctrl + Alt + E</code></span>
+        <button class="btn-toggle" onclick="desactivarModoEdicion()" style="border-color: var(--edit-banner-border)">Salir de edición</button>
+    </div>
+
+    <div class="tables-grid">
+        
+        <!-- TABLA PRODUCCIÓN -->
+        <div class="table-card">
+            <div class="table-header">
+                <div class="table-title">
+                    <span>🟢 PRODUCCIÓN</span>
+                    <span class="badge-count" id="count-prod">21</span>
+                </div>
+            </div>
+            <table id="table-prod">
+                <thead>
+                    <tr>
+                        <th class="col-cliente">CLIENTE</th>
+                        <th class="col-front">FRONT</th>
+                        <th class="col-back">BACK</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="col-cliente"><button class="btn-delete-row" onclick="deleteRow(this)">×</button><span class="status-dot dot-pink"></span><span class="client-name">AGRIZAR</span></td>
+                        <td class="col-front"><span class="ver-pill ver-front">v1.2.36</span></td>
+                        <td class="col-back"><span class="ver-pill ver-back">v1.2.31</span></td>
+                    </tr>
+                    <tr>
+                        <td class="col-cliente"><button class="btn-delete-row" onclick="deleteRow(this)">×</button><span class="status-dot dot-pink"></span><span class="client-name">ASCENDUM</span></td>
+                        <td class="col-front"><span class="ver-pill ver-front">v1.1.2</span></td>
+                        <td class="col-back"><span class="ver-pill ver-back">v1.0.75</span></td>
+                    </tr>
+                    <tr>
+                        <td class="col-cliente"><button class="btn-delete-row" onclick="deleteRow(this)">×</button><span class="status-dot dot-amber"></span><span class="client-name">DBG</span></td>
+                        <td class="col-front"><span class="ver-pill ver-front">v1.2.10</span></td>
+                        <td class="col-back"><span class="ver-pill ver-back">v1.1.11</span></td>
+                    </tr>
+                    <tr>
+                        <td class="col-cliente"><button class="btn-delete-row" onclick="deleteRow(this)">×</button><span class="status-dot dot-amber"></span><span class="client-name">JAROPAMEX</span></td>
+                        <td class="col-front"><span class="ver-pill ver-front">v1.2.10</span></td>
+                        <td class="col-back"><span class="ver-pill ver-back">v1.1.11</span></td>
+                    </tr>
+                    <tr>
+                        <td class="col-cliente"><button class="btn-delete-row" onclick="deleteRow(this)">×</button><span class="status-dot dot-amber"></span><span class="client-name">JTEKT</span></td>
+                        <td class="col-front"><span class="ver-pill ver-front">v1.2.36</span></td>
+                        <td class="col-back"><span class="ver-pill ver-back">v1.2.31</span></td>
+                    </tr>
+                    <tr>
+                        <td class="col-cliente"><button class="btn-delete-row" onclick="deleteRow(this)">×</button><span class="status-dot dot-blue"></span><span class="client-name">LATECOERE</span></td>
+                        <td class="col-front"><span class="ver-pill ver-front">v1.0.53</span></td>
+                        <td class="col-back"><span class="ver-pill ver-back">v1.0.58</span></td>
+                    </tr>
+                    <tr>
+                        <td class="col-cliente"><button class="btn-delete-row" onclick="deleteRow(this)">×</button><span class="status-dot dot-pink"></span><span class="client-name">MARAGA</span></td>
+                        <td class="col-front"><span class="ver-pill ver-front">v1.2.18</span></td>
+                        <td class="col-back"><span class="ver-pill ver-back">v1.2.10</span></td>
+                    </tr>
+                    <tr>
+                        <td class="col-cliente"><button class="btn-delete-row" onclick="deleteRow(this)">×</button><span class="status-dot dot-pink"></span><span class="client-name">SIMEC</span></td>
+                        <td class="col-front"><span class="ver-pill ver-front">v1.0.65</span></td>
+                        <td class="col-back"><span class="ver-pill ver-back">v1.0.72</span></td>
+                    </tr>
+                    <tr>
+                        <td class="col-cliente"><button class="btn-delete-row" onclick="deleteRow(this)">×</button><span class="status-dot dot-pink"></span><span class="client-name">TOKAI</span></td>
+                        <td class="col-front"><span class="ver-pill ver-front">v1.0.65</span></td>
+                        <td class="col-back"><span class="ver-pill ver-back">v1.0.72</span></td>
+                    </tr>
+                    <tr>
+                        <td class="col-cliente"><button class="btn-delete-row" onclick="deleteRow(this)">×</button><span class="status-dot dot-pink"></span><span class="client-name">ARIES</span></td>
+                        <td class="col-front"><span class="ver-pill ver-front">v1.2.10</span></td>
+                        <td class="col-back"><span class="ver-pill ver-back">v1.1.11</span></td>
+                    </tr>
+                    <tr>
+                        <td class="col-cliente"><button class="btn-delete-row" onclick="deleteRow(this)">×</button><span class="status-dot dot-blue"></span><span class="client-name">AVALANZ</span></td>
+                        <td class="col-front"><span class="ver-pill ver-front">v1.0.62.1</span></td>
+                        <td class="col-back"><span class="ver-pill ver-back">v1.0.67</span></td>
+                    </tr>
+                    <tr>
+                        <td class="col-cliente"><button class="btn-delete-row" onclick="deleteRow(this)">×</button><span class="status-dot dot-pink"></span><span class="client-name">FEMA</span></td>
+                        <td class="col-front"><span class="ver-pill ver-front">v1.2.18</span></td>
+                        <td class="col-back"><span class="ver-pill ver-back">v1.2.10</span></td>
+                    </tr>
+                    <tr>
+                        <td class="col-cliente"><button class="btn-delete-row" onclick="deleteRow(this)">×</button><span class="status-dot dot-amber"></span><span class="client-name">JOYSONSAFETY</span></td>
+                        <td class="col-front"><span class="ver-pill ver-front">v1.2.10</span></td>
+                        <td class="col-back"><span class="ver-pill ver-back">v1.1.11</span></td>
+                    </tr>
+                    <tr>
+                        <td class="col-cliente"><button class="btn-delete-row" onclick="deleteRow(this)">×</button><span class="status-dot dot-pink"></span><span class="client-name">KIPP</span></td>
+                        <td class="col-front"><span class="ver-pill ver-front">v1.0.65</span></td>
+                        <td class="col-back"><span class="ver-pill ver-back">v1.0.72</span></td>
+                    </tr>
+                    <tr>
+                        <td class="col-cliente"><button class="btn-delete-row" onclick="deleteRow(this)">×</button><span class="status-dot dot-pink"></span><span class="client-name">LEADEC</span></td>
+                        <td class="col-front"><span class="ver-pill ver-front">v1.1.2</span></td>
+                        <td class="col-back"><span class="ver-pill ver-back">v1.0.74</span></td>
+                    </tr>
+                    <tr>
+                        <td class="col-cliente"><button class="btn-delete-row" onclick="deleteRow(this)">×</button><span class="status-dot dot-pink"></span><span class="client-name">MITSUBISHI</span></td>
+                        <td class="col-front"><span class="ver-pill ver-front">v1.0.53</span></td>
+                        <td class="col-back"><span class="ver-pill ver-back">v1.0.58</span></td>
+                    </tr>
+                    <tr>
+                        <td class="col-cliente"><button class="btn-delete-row" onclick="deleteRow(this)">×</button><span class="status-dot dot-pink"></span><span class="client-name">SACKKRAFT</span></td>
+                        <td class="col-front"><span class="ver-pill ver-front">v1.0.64</span></td>
+                        <td class="col-back"><span class="ver-pill ver-back">v1.0.70</span></td>
+                    </tr>
+                    <tr>
+                        <td class="col-cliente"><button class="btn-delete-row" onclick="deleteRow(this)">×</button><span class="status-dot dot-pink"></span><span class="client-name">STUCKI</span></td>
+                        <td class="col-front"><span class="ver-pill ver-front">v1.1.2</span></td>
+                        <td class="col-back"><span class="ver-pill ver-back">v1.0.74</span></td>
+                    </tr>
+                    <tr>
+                        <td class="col-cliente"><button class="btn-delete-row" onclick="deleteRow(this)">×</button><span class="status-dot dot-pink"></span><span class="client-name">HELLERMANTYTON</span></td>
+                        <td class="col-front"><span class="ver-pill ver-front">v1.2.18</span></td>
+                        <td class="col-back"><span class="ver-pill ver-back">v1.2.10</span></td>
+                    </tr>
+                    <tr>
+                        <td class="col-cliente"><button class="btn-delete-row" onclick="deleteRow(this)">×</button><span class="status-dot dot-pink"></span><span class="client-name">SAAS</span></td>
+                        <td class="col-front"><span class="ver-pill ver-front">v1.2.5</span></td>
+                        <td class="col-back"><span class="ver-pill ver-back">v1.1.7.2</span></td>
+                    </tr>
+                <tr>
+            <td class="col-cliente">
+                <button class="btn-delete-row" onclick="deleteRow(this)">×</button>
+                <span class="status-dot dot-blue"></span>
+                <span class="client-name">TYSON</span>
+            </td>
+            <td class="col-front"><span class="ver-pill ver-front">v1.2.11</span></td>
+            <td class="col-back"><span class="ver-pill ver-back">v1.0.5</span></td>
+        </tr></tbody>
+            </table>
+            <button class="btn-add-row" onclick="addRow('table-prod')">+ Agregar Cliente</button>
+        </div>
+
+        <!-- TABLA INTEGRACIONES -->
+        <div class="table-card">
+            <div class="table-header">
+                <div class="table-title">
+                    <span>⚡ INTEGRACIONES</span>
+                    <span class="badge-count" id="count-integ">5</span>
+                </div>
+            </div>
+            <table id="table-integ">
+                <thead>
+                    <tr>
+                        <th class="col-cliente">CLIENTE</th>
+                        <th class="col-front">FRONT</th>
+                        <th class="col-back">BACK</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="col-cliente"><button class="btn-delete-row" onclick="deleteRow(this)">×</button><span class="status-dot dot-blue"></span><span class="client-name">ARIES</span></td>
+                        <td class="col-front"><span class="ver-pill ver-front">v1.2.34</span></td>
+                        <td class="col-back"><span class="ver-pill ver-back">v1.2.26</span></td>
+                    </tr>
+                    
+                    <tr>
+                        <td class="col-cliente"><button class="btn-delete-row" onclick="deleteRow(this)">×</button><span class="status-dot dot-blue"></span><span class="client-name">ACS</span></td>
+                        <td class="col-front"><span class="ver-pill ver-front">v1.2.34</span></td>
+                        <td class="col-back"><span class="ver-pill ver-back">v1.2.26</span></td>
+                    </tr>
+                    <tr>
+                        <td class="col-cliente"><button class="btn-delete-row" onclick="deleteRow(this)">×</button><span class="status-dot dot-blue"></span><span class="client-name">DEV</span></td>
+                        <td class="col-front"><span class="ver-pill ver-front">v1.2.34</span></td>
+                        <td class="col-back"><span class="ver-pill ver-back">v1.2.26</span></td>
+                    </tr>
+                    <tr>
+                        <td class="col-cliente"><button class="btn-delete-row" onclick="deleteRow(this)">×</button><span class="status-dot dot-blue"></span><span class="client-name">MARAGA</span></td>
+                        <td class="col-front"><span class="ver-pill ver-front">v1.2.36</span></td>
+                        <td class="col-back"><span class="ver-pill ver-back">v1.2.34</span></td>
+                    </tr>
+                    <tr>
+                        <td class="col-cliente"><button class="btn-delete-row" onclick="deleteRow(this)">×</button><span class="status-dot dot-purple"></span><span class="client-name">TYSON</span></td>
+                        <td class="col-front"><span class="ver-pill ver-front">v1.2.11</span></td>
+                        <td class="col-back"><span class="ver-pill ver-back">v1.0.5</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button class="btn-add-row" onclick="addRow('table-integ')">+ Agregar Cliente</button>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    const CONTRASEÑA_CORRECTA = '1234';
+    let editMode = false;
+
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark');
+        const icon = document.getElementById('theme-icon');
+        icon.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+    }
+
+    document.addEventListener('keydown', function(event) {
+        if (event.ctrlKey && event.altKey && (event.key === 'e' || event.key === 'E')) {
+            event.preventDefault();
+            if (!editMode) {
+                const pass = prompt('Modo Administrador:\nIngresa la contraseña para editar:');
+                if (pass === CONTRASEÑA_CORRECTA) {
+                    activarModoEdicion();
+                } else if (pass !== null) {
+                    alert('Contraseña incorrecta.');
+                }
+            } else {
+                desactivarModoEdicion();
+            }
+        }
+    });
+
+    function activarModoEdicion() {
+        editMode = true;
+        document.body.classList.add('is-editing');
+        document.getElementById('edit-mode-indicator').style.display = 'flex';
+        
+        document.querySelectorAll('.client-name, .ver-pill, #api-oc-prod-val, #api-oc-integ-val').forEach(el => {
+            el.setAttribute('contenteditable', 'true');
+            el.addEventListener('blur', guardarEstado);
+        });
+    }
+
+    function desactivarModoEdicion() {
+        editMode = false;
+        document.body.classList.remove('is-editing');
+        document.getElementById('edit-mode-indicator').style.display = 'none';
+        
+        document.querySelectorAll('.client-name, .ver-pill, #api-oc-prod-val, #api-oc-integ-val').forEach(el => {
+            el.removeAttribute('contenteditable');
+        });
+        guardarEstado();
+    }
+
+    function addRow(tableId) {
+        const table = document.getElementById(tableId).querySelector('tbody');
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td class="col-cliente">
+                <button class="btn-delete-row" onclick="deleteRow(this)">×</button>
+                <span class="status-dot dot-blue"></span>
+                <span class="client-name" contenteditable="true">NUEVO_CLIENTE</span>
+            </td>
+            <td class="col-front"><span class="ver-pill ver-front" contenteditable="true">v1.0.0</span></td>
+            <td class="col-back"><span class="ver-pill ver-back" contenteditable="true">v1.0.0</span></td>
+        `;
+        table.appendChild(newRow);
+        
+        newRow.querySelectorAll('.client-name, .ver-pill').forEach(el => {
+            el.addEventListener('blur', guardarEstado);
+        });
+
+        actualizarContadores();
+        guardarEstado();
+    }
+
+    function deleteRow(btn) {
+        if (confirm('¿Deseas eliminar esta fila?')) {
+            btn.closest('tr').remove();
+            actualizarContadores();
+            guardarEstado();
+        }
+    }
+
+    function actualizarContadores() {
+        document.getElementById('count-prod').textContent = document.querySelectorAll('#table-prod tbody tr').length;
+        document.getElementById('count-integ').textContent = document.querySelectorAll('#table-integ tbody tr').length;
+    }
+
+    function guardarEstado() {
+        const data = {
+            api_oc_prod: document.getElementById('api-oc-prod-val').textContent,
+            api_oc_integ: document.getElementById('api-oc-integ-val').textContent,
+            prod: document.querySelector('#table-prod tbody').innerHTML,
+            integ: document.querySelector('#table-integ tbody').innerHTML
+        };
+        localStorage.setItem('versiones_dashboard_v2', JSON.stringify(data));
+    }
+
+    function cargarEstado() {
+        const saved = localStorage.getItem('versiones_dashboard_v2');
+        if (saved) {
+            const data = JSON.parse(saved);
+            if (data.api_oc_prod) document.getElementById('api-oc-prod-val').textContent = data.api_oc_prod;
+            if (data.api_oc_integ) document.getElementById('api-oc-integ-val').textContent = data.api_oc_integ;
+            if (data.prod) document.querySelector('#table-prod tbody').innerHTML = data.prod;
+            if (data.integ) document.querySelector('#table-integ tbody').innerHTML = data.integ;
+            actualizarContadores();
+        }
+    }
+
+    cargarEstado();
+</script>
+
+
+</body></html>
