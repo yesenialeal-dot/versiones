@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- saved from url=(0099)file:///C:/Users/yesenia.leal/Desktop/Dashboard%20de%20Versiones%20-%20Control%20de%20Software.html -->
 <html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +6,7 @@
     <!-- Fuentes Google: Inter & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com/">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
-    <link href="./Dashboard de Versiones - Control de Software_files/css2" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -115,6 +114,32 @@
             align-items: center;
             gap: 0.85rem;
             flex-wrap: wrap;
+        }
+
+        /* Badge Fecha de Actualización */
+        .update-date-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 0.45rem 0.75rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .update-date-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            letter-spacing: 0.03em;
+        }
+
+        .update-date-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.825rem;
+            font-weight: 600;
+            color: var(--text-primary);
         }
 
         /* Tarjetas Api_OC */
@@ -400,6 +425,12 @@
     <header>
         <h1>Control de Versiones VENVERS</h1>
         <div class="header-right">
+            <!-- FECHA DE ACTUALIZACIÓN -->
+            <div class="update-date-card">
+                <span class="update-date-label">📅 Actualizado:</span>
+                <span class="update-date-val" id="last-update-val">05/Nov/2026</span>
+            </div>
+
             <!-- TARJETAS API_OC -->
             <div class="api-oc-card">
                 <span class="api-oc-label">Api_OC Prod:</span>
@@ -542,15 +573,16 @@
                         <td class="col-front"><span class="ver-pill ver-front">v1.2.5</span></td>
                         <td class="col-back"><span class="ver-pill ver-back">v1.1.7.2</span></td>
                     </tr>
-                <tr>
-            <td class="col-cliente">
-                <button class="btn-delete-row" onclick="deleteRow(this)">×</button>
-                <span class="status-dot dot-blue"></span>
-                <span class="client-name">TYSON</span>
-            </td>
-            <td class="col-front"><span class="ver-pill ver-front">v1.2.11</span></td>
-            <td class="col-back"><span class="ver-pill ver-back">v1.0.5</span></td>
-        </tr></tbody>
+                    <tr>
+                        <td class="col-cliente">
+                            <button class="btn-delete-row" onclick="deleteRow(this)">×</button>
+                            <span class="status-dot dot-blue"></span>
+                            <span class="client-name">TYSON</span>
+                        </td>
+                        <td class="col-front"><span class="ver-pill ver-front">v1.2.11</span></td>
+                        <td class="col-back"><span class="ver-pill ver-back">v1.0.5</span></td>
+                    </tr>
+                </tbody>
             </table>
             <button class="btn-add-row" onclick="addRow('table-prod')">+ Agregar Cliente</button>
         </div>
@@ -577,7 +609,6 @@
                         <td class="col-front"><span class="ver-pill ver-front">v1.2.34</span></td>
                         <td class="col-back"><span class="ver-pill ver-back">v1.2.26</span></td>
                     </tr>
-                    
                     <tr>
                         <td class="col-cliente"><button class="btn-delete-row" onclick="deleteRow(this)">×</button><span class="status-dot dot-blue"></span><span class="client-name">ACS</span></td>
                         <td class="col-front"><span class="ver-pill ver-front">v1.2.34</span></td>
@@ -637,7 +668,7 @@
         document.body.classList.add('is-editing');
         document.getElementById('edit-mode-indicator').style.display = 'flex';
         
-        document.querySelectorAll('.client-name, .ver-pill, #api-oc-prod-val, #api-oc-integ-val').forEach(el => {
+        document.querySelectorAll('.client-name, .ver-pill, #api-oc-prod-val, #api-oc-integ-val, #last-update-val').forEach(el => {
             el.setAttribute('contenteditable', 'true');
             el.addEventListener('blur', guardarEstado);
         });
@@ -648,7 +679,7 @@
         document.body.classList.remove('is-editing');
         document.getElementById('edit-mode-indicator').style.display = 'none';
         
-        document.querySelectorAll('.client-name, .ver-pill, #api-oc-prod-val, #api-oc-integ-val').forEach(el => {
+        document.querySelectorAll('.client-name, .ver-pill, #api-oc-prod-val, #api-oc-integ-val, #last-update-val').forEach(el => {
             el.removeAttribute('contenteditable');
         });
         guardarEstado();
@@ -691,6 +722,7 @@
 
     function guardarEstado() {
         const data = {
+            last_update: document.getElementById('last-update-val').textContent,
             api_oc_prod: document.getElementById('api-oc-prod-val').textContent,
             api_oc_integ: document.getElementById('api-oc-integ-val').textContent,
             prod: document.querySelector('#table-prod tbody').innerHTML,
@@ -703,6 +735,7 @@
         const saved = localStorage.getItem('versiones_dashboard_v2');
         if (saved) {
             const data = JSON.parse(saved);
+            if (data.last_update) document.getElementById('last-update-val').textContent = data.last_update;
             if (data.api_oc_prod) document.getElementById('api-oc-prod-val').textContent = data.api_oc_prod;
             if (data.api_oc_integ) document.getElementById('api-oc-integ-val').textContent = data.api_oc_integ;
             if (data.prod) document.querySelector('#table-prod tbody').innerHTML = data.prod;
@@ -713,6 +746,5 @@
 
     cargarEstado();
 </script>
-
 
 </body></html>
